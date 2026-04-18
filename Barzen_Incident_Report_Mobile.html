@@ -150,7 +150,26 @@
       <div class="fld"><span class="fld-lbl">PERSON INVOLVED</span><input type="text" class="fld-input" id="fPerson" placeholder="Full name"></div>
       <div class="fld-row">
         <div class="fld"><span class="fld-lbl">EMPLOYER / COMPANY</span><input type="text" class="fld-input" id="fEmployer" placeholder="Company name"></div>
-        <div class="fld"><span class="fld-lbl">TRADE / ROLE</span><input type="text" class="fld-input" id="fTrade" placeholder="e.g. Carpenter"></div>
+        <div class="fld"><span class="fld-lbl">TRADE / ROLE</span>
+          <select class="fld-input" id="fTrade">
+            <option value="">Select...</option>
+            <option>Carpenter</option>
+            <option>Concretor</option>
+            <option>Electrician</option>
+            <option>Plumber</option>
+            <option>Rigger</option>
+            <option>Scaffolder</option>
+            <option>Steel fixer</option>
+            <option>Labourer</option>
+            <option>Plant operator</option>
+            <option>Painter</option>
+            <option>Tiler</option>
+            <option>Waterproofer</option>
+            <option>Site manager</option>
+            <option>Supervisor / Foreman</option>
+            <option>Other</option>
+          </select>
+        </div>
       </div>
       <div class="fld-row">
         <div class="fld"><span class="fld-lbl">CONTACT NUMBER</span><input type="tel" class="fld-input" id="fContact" placeholder="04xx xxx xxx" inputmode="tel"></div>
@@ -183,8 +202,57 @@
       <div class="fld"><span class="fld-lbl">EQUIPMENT / MATERIAL INVOLVED</span><input type="text" class="fld-input" id="fEquipment" placeholder="e.g. Angle grinder, scaffold, chemical"></div>
       <div class="fld"><span class="fld-lbl">DESCRIPTION OF INCIDENT</span><textarea class="fld-input" id="fDescription" placeholder="Describe exactly what happened, in sequence..."></textarea></div>
       <div class="fld-row">
-        <div class="fld"><span class="fld-lbl">INJURY / ILLNESS DETAILS</span><input type="text" class="fld-input" id="fInjuryDetail" placeholder="e.g. Laceration, sprain"></div>
-        <div class="fld"><span class="fld-lbl">BODY PART AFFECTED</span><input type="text" class="fld-input" id="fBodyPart" placeholder="e.g. Right hand"></div>
+        <div class="fld"><span class="fld-lbl">INJURY / ILLNESS DETAILS</span>
+          <select class="fld-input" id="fInjuryDetail">
+            <option value="">Select...</option>
+            <option>Laceration / Cut</option>
+            <option>Bruising / Contusion</option>
+            <option>Sprain / Strain</option>
+            <option>Fracture</option>
+            <option>Crush injury</option>
+            <option>Burn — heat</option>
+            <option>Burn — chemical</option>
+            <option>Eye injury</option>
+            <option>Hearing damage</option>
+            <option>Heat illness / Fatigue</option>
+            <option>Respiratory irritation</option>
+            <option>Near miss — no injury</option>
+            <option>Property damage only</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="fld"><span class="fld-lbl">BODY PART AFFECTED</span>
+          <select class="fld-input" id="fBodyPart">
+            <option value="">Select...</option>
+            <option>Head / Skull</option>
+            <option>Face</option>
+            <option>Eye — left</option>
+            <option>Eye — right</option>
+            <option>Ear</option>
+            <option>Neck</option>
+            <option>Shoulder — left</option>
+            <option>Shoulder — right</option>
+            <option>Upper arm</option>
+            <option>Elbow</option>
+            <option>Forearm</option>
+            <option>Wrist</option>
+            <option>Hand — left</option>
+            <option>Hand — right</option>
+            <option>Finger(s)</option>
+            <option>Chest / Ribs</option>
+            <option>Upper back</option>
+            <option>Lower back</option>
+            <option>Hip</option>
+            <option>Thigh</option>
+            <option>Knee</option>
+            <option>Lower leg</option>
+            <option>Ankle</option>
+            <option>Foot</option>
+            <option>Toe(s)</option>
+            <option>Multiple areas</option>
+            <option>Not applicable</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
@@ -219,7 +287,18 @@
           </div>
         </div>
       </div>
-      <div class="fld"><span class="fld-lbl">TREATMENT PROVIDED</span><input type="text" class="fld-input" id="fTreatment" placeholder="e.g. Wound cleaned and dressed"></div>
+      <div class="fld"><span class="fld-lbl">TREATMENT PROVIDED</span>
+        <select class="fld-input" id="fTreatment">
+          <option value="">Select...</option>
+          <option>First aid only — remained on site</option>
+          <option>First aid — sent home to rest</option>
+          <option>Sent to medical clinic</option>
+          <option>Sent to hospital / ED</option>
+          <option>Ambulance attended and transported</option>
+          <option>No treatment required</option>
+          <option>Other</option>
+        </select>
+      </div>
       <div class="fld-row">
         <div class="fld">
           <span class="fld-lbl">DID WORKER LEAVE SITE?</span>
@@ -228,11 +307,24 @@
             <div class="yn-btn no"  onclick="toggleYN(this,'ynLeftSite')">No</div>
           </div>
         </div>
-        <div class="fld"><span class="fld-lbl">APPROVED BY</span><input type="text" class="fld-input" id="fApprovedBy" placeholder="Name"></div>
+        <div class="fld"><span class="fld-lbl">APPROVED BY</span>
+          <select class="fld-input" id="fApprovedBy">
+            <option value="">Select...</option>
+          </select>
+        </div>
       </div>
       <div class="fld-row">
         <div class="fld"><span class="fld-lbl">ACCOMPANIED BY</span><input type="text" class="fld-input" id="fAccompanied" placeholder="Name"></div>
-        <div class="fld"><span class="fld-lbl">TRANSPORT METHOD</span><input type="text" class="fld-input" id="fTransport" placeholder="e.g. Own vehicle, ambulance"></div>
+        <div class="fld"><span class="fld-lbl">TRANSPORT METHOD</span>
+          <select class="fld-input" id="fTransport">
+            <option value="">Select...</option>
+            <option>Own vehicle</option>
+            <option>Colleague's vehicle</option>
+            <option>Ambulance</option>
+            <option>Taxi / Rideshare</option>
+            <option>Not applicable</option>
+          </select>
+        </div>
       </div>
       <div class="fld-row">
         <div class="fld"><span class="fld-lbl">SUPERVISOR NOTIFIED AT</span><input type="time" class="fld-input" id="fSupNotified"></div>
@@ -441,6 +533,7 @@ function getActions() {
 populateJobs();
 populateStaff('fReportedBy');
 populateStaff('fSiteMgr');
+populateStaff('fApprovedBy');
 document.getElementById('fDate').valueAsDate = new Date();
 addAction(); addAction(); addAction();
 
