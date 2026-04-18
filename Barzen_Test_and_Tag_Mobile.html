@@ -17,6 +17,7 @@
     --white: #fff;
     --green: #1a6b3f;
     --red: #c62828;
+    --blue: #24497a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -26,13 +27,11 @@
     -webkit-text-size-adjust: 100%;
     padding-bottom: env(safe-area-inset-bottom, 20px);
   }
-  .page { max-width: 640px; margin: 0 auto; padding: 10px; }
+  .page { max-width: 700px; margin: 0 auto; padding: 10px; }
 
   .hdr {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 10px;
+    background: var(--white); border-radius: 12px;
+    padding: 16px; margin-bottom: 10px;
     border-top: 4px solid var(--orange);
   }
   .hdr-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -41,23 +40,18 @@
   .logo-txt { font-size: 22px; font-weight: 800; color: var(--dark); font-family: Arial; }
   .logo-txt small { display: block; font-size: 10px; font-weight: 400; letter-spacing: 5px; color: var(--muted); }
   .hdr h1 { font-size: 20px; font-weight: 700; }
-  .hdr-meta { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.7; }
+  .hdr-meta { font-size: 13px; color: var(--muted); margin-top: 6px; }
 
   .card { background: var(--white); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-  .card-hd {
-    background: var(--section-bg); padding: 12px 16px;
-    border-left: 4px solid var(--orange);
-    font-size: 15px; font-weight: 700;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .card-hd .hd-count { font-size: 12px; color: var(--muted); font-weight: 600; }
-  .card-bd { padding: 14px 16px; }
+  .card-hd { background: var(--section-bg); padding: 10px 14px; border-left: 4px solid var(--orange); font-size: 14px; font-weight: 700; }
+  .card-bd { padding: 12px 14px; }
 
-  .fld { margin-bottom: 14px; }
-  .fld-lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--label); letter-spacing: .3px; margin-bottom: 6px; display: block; }
+  .fld { margin-bottom: 12px; }
+  .fld:last-child { margin-bottom: 0; }
+  .fld-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--label); letter-spacing: .3px; margin-bottom: 5px; display: block; }
   .fld-input {
     width: 100%; background: var(--input-bg); border: 1px solid #ddd; border-radius: 8px;
-    padding: 14px 12px; font-size: 16px; font-family: inherit; color: var(--dark);
+    padding: 12px; font-size: 15px; font-family: inherit; color: var(--dark);
     outline: none; -webkit-appearance: none; appearance: none;
   }
   .fld-input:focus { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(232,132,44,.2); }
@@ -70,47 +64,63 @@
   .auto-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
   .auto-hint b { color: var(--dark); }
 
-  .item {
-    border: 1px solid #e0e0e0; border-radius: 10px;
-    padding: 14px; margin-bottom: 12px; background: #fafafa;
+  /* TOOL TABLE */
+  .tool-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tool-table thead th {
+    background: var(--section-bg); padding: 8px 6px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    color: var(--label); text-align: left; border-bottom: 2px solid #ddd;
   }
-  .item-hd {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0;
-  }
-  .item-hd h3 { font-size: 16px; font-weight: 700; }
-  .item-del {
-    background: transparent; border: 1px solid #d9a7a5; color: var(--red);
-    padding: 4px 10px; border-radius: 6px; font-size: 12px; font-family: inherit;
-    font-weight: 600; cursor: pointer;
-  }
-  .pw { display: flex; gap: 6px; margin-top: 6px; }
+  .tool-table thead th:first-child { border-left: 3px solid var(--orange); padding-left: 10px; }
+  .tool-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+  .tool-table tbody tr:last-child { border-bottom: none; }
+  .tool-table td { padding: 6px 4px; vertical-align: middle; }
+  .tool-table td:first-child { padding-left: 10px; }
+
+  .t-num { width: 28px; font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
+  .t-model input { width: 100%; border: 1px solid #ddd; border-radius: 6px; padding: 9px 8px; font-size: 14px; font-family: inherit; background: var(--input-bg); outline: none; }
+  .t-model input:focus { border-color: var(--orange); }
+  .t-power { width: 100px; }
+  .pw { display: flex; gap: 4px; }
   .pw-btn {
-    flex: 1; padding: 12px 6px; text-align: center; border: 1.5px solid #ddd;
-    background: var(--white); border-radius: 8px; font-size: 13px; font-weight: 700;
+    flex: 1; padding: 8px 4px; text-align: center; border: 1.5px solid #ddd;
+    background: var(--white); border-radius: 6px; font-size: 12px; font-weight: 700;
     cursor: pointer; color: var(--muted); user-select: none; -webkit-tap-highlight-color: transparent;
   }
-  .pw-btn.corded.on { background: #eaf0f8; border-color: #35618d; color: #24497a; }
+  .pw-btn.corded.on { background: #eaf0f8; border-color: var(--blue); color: var(--blue); }
   .pw-btn.battery.on { background: #eaf5ee; border-color: var(--green); color: var(--green); }
+  .t-tag input, .t-plant input {
+    width: 100%; border: 1px solid #ddd; border-radius: 6px;
+    padding: 9px 8px; font-size: 14px; font-family: inherit;
+    background: var(--input-bg); outline: none;
+  }
+  .t-tag input:focus, .t-plant input:focus { border-color: var(--orange); }
+  .t-tag { width: 100px; }
+  .t-plant { width: 72px; }
+  .t-del { width: 34px; text-align: center; }
+  .t-del button {
+    background: transparent; border: 1px solid #e8bcba; color: var(--red);
+    border-radius: 6px; width: 28px; height: 28px; font-size: 16px;
+    cursor: pointer; line-height: 1; padding: 0;
+  }
 
   .add-row-btn {
     width: 100%; background: transparent; color: var(--orange);
-    border: 1px dashed var(--orange); padding: 12px; border-radius: 8px;
-    font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
-    margin-top: 6px;
+    border: 1px dashed var(--orange); padding: 11px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 10px;
   }
 
   .btn-email {
     display: flex; width: 100%; background: var(--green); color: var(--white);
-    border: none; padding: 18px; border-radius: 12px;
-    font-size: 17px; font-weight: 700; font-family: inherit;
+    border: none; padding: 16px; border-radius: 12px;
+    font-size: 16px; font-weight: 700; font-family: inherit;
     cursor: pointer; margin-top: 10px;
     align-items: center; justify-content: center; gap: 8px;
   }
   .btn-email:active { opacity: .85; }
-  .btn-email svg { width: 22px; height: 22px; fill: white; }
-  .btn-secondary { display: block; width: 100%; background: var(--orange); color: var(--white); border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 8px; }
-  .btn-outline { display: block; width: 100%; background: var(--white); color: var(--dark); border: 1px solid var(--border); padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 8px; }
+  .btn-email svg { width: 20px; height: 20px; fill: white; }
+  .btn-secondary { display: block; width: 100%; background: var(--orange); color: var(--white); border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 8px; }
+  .btn-outline { display: block; width: 100%; background: var(--white); color: var(--dark); border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 8px; }
 
   .status { margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13px; display: none; }
   .status.ok { background: #eaf5ee; color: var(--green); border: 1px solid #bfe0cc; display: block; }
@@ -118,11 +128,15 @@
 
   .footer { display:flex; justify-content:space-between; margin-top:14px; padding:10px 0; font-size:11px; color:var(--muted); }
 
-  @media(max-width:480px) { .fld-row { flex-direction: column; gap: 0; } }
+  @media(max-width:520px) {
+    .t-power { width: 80px; }
+    .t-tag { width: 80px; }
+    .t-plant { width: 60px; }
+    .fld-row { flex-direction: column; gap: 0; }
+  }
 </style>
 </head>
 <body>
-
 <div class="page">
 
   <div class="hdr">
@@ -131,11 +145,12 @@
       <div class="logo-txt">arzen<small>P r o j e c t s</small></div>
     </div>
     <h1>Test &amp; Tag Register</h1>
-    <div class="hdr-meta">Form BP-ELEC-F01 | Rev 2 — Record of tools tested on site.</div>
+    <div class="hdr-meta">Form BP-ELEC-F01 | Rev 2</div>
   </div>
 
+  <!-- JOB -->
   <div class="card">
-    <div class="card-hd">1. Job</div>
+    <div class="card-hd">Job</div>
     <div class="card-bd">
       <div class="fld">
         <span class="fld-lbl">JOB</span>
@@ -146,41 +161,57 @@
       </div>
       <div class="fld-row">
         <div class="fld"><span class="fld-lbl">DATE</span><input type="date" class="fld-input" id="fDate"></div>
-        <div class="fld">
-          <span class="fld-lbl">SITE MANAGER</span>
-          <select class="fld-input" id="fSm">
-            <option value="">Select...</option>
-          </select>
+        <div class="fld"><span class="fld-lbl">SITE MANAGER</span>
+          <select class="fld-input" id="fSm"><option value="">Select...</option></select>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- TESTING DETAILS -->
   <div class="card">
-    <div class="card-hd">2. Testing details</div>
+    <div class="card-hd">Testing details</div>
     <div class="card-bd">
-      <div class="fld"><span class="fld-lbl">TESTING / COMPANY NAME</span>
-        <input type="text" class="fld-input" id="fCompany" placeholder="e.g. M Squared Electrical" list="companies">
-        <datalist id="companies">
-          <option value="M Squared Electrical"></option>
-        </datalist>
-      </div>
-      <div class="fld"><span class="fld-lbl">CERT / LICENCE NUMBER</span>
-        <input type="text" class="fld-input" id="fLic" placeholder="e.g. 23899">
+      <div class="fld-row">
+        <div class="fld">
+          <span class="fld-lbl">TESTING / COMPANY NAME</span>
+          <input type="text" class="fld-input" id="fCompany" placeholder="e.g. M Squared Electrical" list="companies">
+          <datalist id="companies"><option value="M Squared Electrical"></option></datalist>
+        </div>
+        <div class="fld" style="max-width:160px">
+          <span class="fld-lbl">CERT / LICENCE NO.</span>
+          <input type="text" class="fld-input" id="fLic" placeholder="e.g. 23899">
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- TOOLS TABLE -->
   <div class="card">
-    <div class="card-hd">3. Tools tested <span class="hd-count" id="itemCount">0 items</span></div>
-    <div class="card-bd">
-      <div id="itemList"></div>
-      <button class="add-row-btn" onclick="addItem()">+ Add tool</button>
+    <div class="card-hd">Tools tested</div>
+    <div class="card-bd" style="padding:0 0 12px 0; overflow-x:auto;">
+      <table class="tool-table" id="toolTable">
+        <thead>
+          <tr>
+            <th class="t-num">#</th>
+            <th class="t-model">Tool make and model</th>
+            <th class="t-power">Power</th>
+            <th class="t-tag">Tag no.</th>
+            <th class="t-plant">Plant no.</th>
+            <th class="t-del"></th>
+          </tr>
+        </thead>
+        <tbody id="toolBody"></tbody>
+      </table>
+      <div style="padding:0 14px">
+        <button class="add-row-btn" onclick="addRow()">+ Add tool</button>
+      </div>
     </div>
   </div>
 
+  <!-- SEND -->
   <div class="card">
-    <div class="card-hd">4. Send</div>
+    <div class="card-hd">Send</div>
     <div class="card-bd">
       <div class="fld"><span class="fld-lbl">SEND TO (BUILDER)</span><input type="email" class="fld-input" id="fToEmail" placeholder="Auto-filled from job"></div>
       <div class="fld"><span class="fld-lbl">CC</span><input type="email" class="fld-input" id="fCcEmail" value="cal@barzenprojects.com.au"></div>
@@ -199,17 +230,16 @@
 </div>
 
 <script>
-/* ---- DATA ---- */
 var JOBS = [
-  {code:'BC04',   name:'Candela',                 builder:'Ironside', site:'40 Upper Heidelberg Road, Ivanhoe, VIC',                       mgr:'Adam Coulter',    to:'m.lagreca@ironside.com.au',     cc:'o.tulloch@ironside.com.au'},
-  {code:'BP1023', name:'Richmond East (Fortis)',  builder:'Hacer',    site:'2-8 Brighton Street, Richmond VIC',                            mgr:'Rhys Smith',      to:'cchisholm@hacer.com.au',        cc:'AHarriss@hacer.com.au'},
-  {code:'BP1024', name:'IGLU',                    builder:'Kane',     site:'360 William Street, Melbourne VIC 3000',                       mgr:'Rikki Brownrigg', to:'nmartin@kane.com.au',           cc:'PMunro@kane.com.au'},
-  {code:'BP1025', name:'The Canopy',              builder:'Crema',    site:'272 Normanby Road, South Melbourne VIC 3205',                  mgr:'Michael Maugeri', to:'buds.beluli@crema.com.au',      cc:'austin.kwon@crema.com.au'},
-  {code:'BP1033', name:'Trielle Tower 9',         builder:'Mirvac',   site:'118-122 South Wharf Drive, Docklands VIC 3008',                mgr:'Conan Ross',      to:'ben.bailey@mirvac.com',         cc:'jack.royle@mirvac.com'},
-  {code:'BP1034', name:'NEL — NVS',               builder:'Spark',    site:'Northern Ventilation Structure, Yallambie VIC 3085',           mgr:'Adam Coulter',    to:'Kedi.Dong@sparknel-dc.com.au',  cc:'Hayley.Catherine@sparknel-dc.com.au'},
-  {code:'BP1036', name:'NEL — SVS',               builder:'Spark',    site:'162-168 Bulleen Road, Bulleen VIC 3105',                       mgr:'Adam Coulter',    to:'david.oshea@sparknel-dc.com.au',cc:'Hayley.Catherine@sparknel-dc.com.au'},
-  {code:'BP1037', name:'Jam Factory Stage 1',     builder:'Crema',    site:'500 Chapel Street, South Yarra VIC 3141',                      mgr:'Michael Maugeri', to:'huw.richardson@crema.com.au',   cc:'nathan.katona@crema.com.au'},
-  {code:'BQ02',   name:'Tannum Sands',            builder:'Paynters', site:'75 Tannum Sands Road, Tannum Sands QLD',                       mgr:'Declan Mc Atee',  to:'shane.godbold@paynters.com.au', cc:'brenton.tovey@paynters.com.au'}
+  {code:'BC04',   name:'Candela',                builder:'Ironside', site:'40 Upper Heidelberg Road, Ivanhoe, VIC',              mgr:'Adam Coulter',    to:'m.lagreca@ironside.com.au',     cc:'o.tulloch@ironside.com.au'},
+  {code:'BP1023', name:'Richmond East (Fortis)', builder:'Hacer',    site:'2-8 Brighton Street, Richmond VIC',                   mgr:'Rhys Smith',      to:'cchisholm@hacer.com.au',        cc:'AHarriss@hacer.com.au'},
+  {code:'BP1024', name:'IGLU',                   builder:'Kane',     site:'360 William Street, Melbourne VIC 3000',              mgr:'Rikki Brownrigg', to:'nmartin@kane.com.au',           cc:'PMunro@kane.com.au'},
+  {code:'BP1025', name:'The Canopy',             builder:'Crema',    site:'272 Normanby Road, South Melbourne VIC 3205',         mgr:'Michael Maugeri', to:'buds.beluli@crema.com.au',      cc:'austin.kwon@crema.com.au'},
+  {code:'BP1033', name:'Trielle Tower 9',        builder:'Mirvac',   site:'118-122 South Wharf Drive, Docklands VIC 3008',       mgr:'Conan Ross',      to:'ben.bailey@mirvac.com',         cc:'jack.royle@mirvac.com'},
+  {code:'BP1034', name:'NEL — NVS',              builder:'Spark',    site:'Northern Ventilation Structure, Yallambie VIC 3085',  mgr:'Adam Coulter',    to:'Kedi.Dong@sparknel-dc.com.au',  cc:'Hayley.Catherine@sparknel-dc.com.au'},
+  {code:'BP1036', name:'NEL — SVS',              builder:'Spark',    site:'162-168 Bulleen Road, Bulleen VIC 3105',              mgr:'Adam Coulter',    to:'david.oshea@sparknel-dc.com.au',cc:'Hayley.Catherine@sparknel-dc.com.au'},
+  {code:'BP1037', name:'Jam Factory Stage 1',    builder:'Crema',    site:'500 Chapel Street, South Yarra VIC 3141',             mgr:'Michael Maugeri', to:'huw.richardson@crema.com.au',   cc:'nathan.katona@crema.com.au'},
+  {code:'BQ02',   name:'Tannum Sands',           builder:'Paynters', site:'75 Tannum Sands Road, Tannum Sands QLD',              mgr:'Declan Mc Atee',  to:'shane.godbold@paynters.com.au', cc:'brenton.tovey@paynters.com.au'}
 ];
 var STAFF = [
   'Cal Crane','Ethan Barzen','Michelle',
@@ -229,14 +259,13 @@ function populateJobs() {
     sel.appendChild(o);
   });
 }
-function populateStaff(sel) {
+function populateStaff() {
+  var sel = document.getElementById('fSm');
   STAFF.forEach(function(s) {
-    var o = document.createElement('option');
-    o.value = s; o.textContent = s;
+    var o = document.createElement('option'); o.value = s; o.textContent = s;
     sel.appendChild(o);
   });
 }
-
 function applyJob() {
   var code = document.getElementById('fJob').value;
   var j = JOBS.find(function(x){ return x.code === code; });
@@ -248,76 +277,81 @@ function applyJob() {
   if (match) sm.value = j.mgr;
 }
 
-/* ---- ITEMS ---- */
-var itemSeq = 0;
-function addItem() {
-  itemSeq++;
-  var c = document.getElementById('itemList');
-  var div = document.createElement('div');
-  div.className = 'item';
-  div.innerHTML =
-    '<div class="item-hd">'
-    + '<h3>Item <span class="num">' + itemSeq + '</span></h3>'
-    + '<button class="item-del" type="button">Remove</button>'
-    + '</div>'
-    + '<div class="fld"><span class="fld-lbl">TOOL MAKE AND MODEL</span>'
-    + '<input type="text" class="fld-input i-model" placeholder="e.g. Makita Charger"></div>'
-    + '<div class="fld"><span class="fld-lbl">POWER TYPE</span>'
-      + '<div class="pw">'
-        + '<div class="pw-btn corded" data-val="Corded">Corded</div>'
-        + '<div class="pw-btn battery" data-val="Battery">Battery</div>'
-      + '</div>'
-      + '<input type="hidden" class="i-power" value="">'
-    + '</div>'
-    + '<div class="fld-row">'
-      + '<div class="fld"><span class="fld-lbl">TAG NUMBER</span><input type="text" class="fld-input i-tag" inputmode="numeric" placeholder="e.g. 101533"></div>'
-      + '<div class="fld"><span class="fld-lbl">PLANT NO. / ITEM</span><input type="text" class="fld-input i-plant" placeholder="e.g. 1"></div>'
-    + '</div>';
-  c.appendChild(div);
+/* TOOL ROWS */
+var rowSeq = 0;
+function addRow() {
+  rowSeq++;
+  var n = rowSeq;
+  var tbody = document.getElementById('toolBody');
+  var tr = document.createElement('tr');
+  tr.id = 'row' + n;
+  tr.innerHTML =
+    '<td class="t-num">' + document.querySelectorAll('#toolBody tr').length + 1 + '</td>'
+    + '<td class="t-model"><input type="text" placeholder="e.g. Makita Charger"></td>'
+    + '<td class="t-power"><div class="pw">'
+        + '<div class="pw-btn corded" data-val="Corded">C</div>'
+        + '<div class="pw-btn battery" data-val="Battery">B</div>'
+      + '</div><input type="hidden" class="i-power" value=""></td>'
+    + '<td class="t-tag"><input type="text" inputmode="numeric" placeholder="101533"></td>'
+    + '<td class="t-plant"><input type="text" placeholder="1"></td>'
+    + '<td class="t-del"><button type="button" onclick="removeRow(this)" title="Remove">×</button></td>';
+  tbody.appendChild(tr);
 
-  div.querySelectorAll('.pw-btn').forEach(function(btn) {
+  tr.querySelectorAll('.pw-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
-      div.querySelectorAll('.pw-btn').forEach(function(b){ b.classList.remove('on'); });
+      tr.querySelectorAll('.pw-btn').forEach(function(b){ b.classList.remove('on'); });
       btn.classList.add('on');
-      div.querySelector('.i-power').value = btn.dataset.val;
+      tr.querySelector('.i-power').value = btn.dataset.val;
     });
   });
-  div.querySelector('.item-del').addEventListener('click', function() {
-    if (confirm('Remove this item?')) { div.remove(); renumber(); up(); }
-  });
-  up();
 }
-function renumber() {
-  var n = 0;
-  document.querySelectorAll('#itemList .item').forEach(function(it) {
-    n++; it.querySelector('.num').textContent = n;
-  });
+function removeRow(btn) {
+  var tr = btn.closest('tr');
+  tr.remove();
+  renumberRows();
 }
-function up() {
-  var total = document.querySelectorAll('#itemList .item').length;
-  document.getElementById('itemCount').textContent = total + ' item' + (total === 1 ? '' : 's');
+function renumberRows() {
+  document.querySelectorAll('#toolBody tr').forEach(function(tr, i) {
+    tr.querySelector('.t-num').textContent = i + 1;
+  });
 }
 
 populateJobs();
-populateStaff(document.getElementById('fSm'));
-for (var i = 0; i < 3; i++) addItem();
+populateStaff();
 document.getElementById('fDate').valueAsDate = new Date();
+for (var i = 0; i < 5; i++) addRow();
 
-/* ---- PDF GENERATION ---- */
+/* PDF */
 function v(id) { return (document.getElementById(id).value || '').trim(); }
 function jobObj() { return JOBS.find(function(x){ return x.code === v('fJob'); }); }
+
+function getRows() {
+  var rows = [];
+  document.querySelectorAll('#toolBody tr').forEach(function(tr, i) {
+    var model = tr.querySelector('.t-model input').value.trim();
+    var power = tr.querySelector('.i-power').value;
+    var tag   = tr.querySelector('.t-tag input').value.trim();
+    var plant = tr.querySelector('.t-plant input').value.trim();
+    if (model || tag) rows.push({num: i+1, model: model, power: power, tag: tag, plant: plant});
+  });
+  return rows;
+}
 
 function buildPDF() {
   var jsPDF = window.jspdf.jsPDF;
   var doc = new jsPDF({unit:'mm', format:'a4'});
-  var pageW = 210, margin = 14;
+  var pageW = 210, margin = 14, cw = pageW - margin * 2;
   var y = margin;
 
+  // Header stripe
   doc.setFillColor(232,132,44); doc.rect(0,0,pageW,3,'F');
+  // Logo
   doc.setFillColor(58,58,58); doc.rect(margin, y, 10, 11, 'F');
-  doc.setFont('helvetica','bold'); doc.setTextColor(232,132,44); doc.setFontSize(14); doc.text('B', margin+2.8, y+8.3);
+  doc.setFont('helvetica','bold'); doc.setTextColor(232,132,44); doc.setFontSize(14);
+  doc.text('B', margin+2.8, y+8.3);
   doc.setTextColor(58,58,58); doc.setFontSize(16); doc.text('arzen', margin+11, y+7);
-  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(120,120,120); doc.text('P R O J E C T S', margin+11, y+10);
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(120,120,120);
+  doc.text('P R O J E C T S', margin+11, y+10);
   doc.setFontSize(8); doc.setTextColor(90,90,90);
   doc.text('BP-ELEC-F01 | Rev 2', pageW-margin, y+5, {align:'right'});
   doc.text('Controlled form', pageW-margin, y+9, {align:'right'});
@@ -327,98 +361,92 @@ function buildPDF() {
   doc.text('Test & Tag Register', margin, y);
   y += 5;
   doc.setDrawColor(232,132,44); doc.setLineWidth(0.4); doc.line(margin, y, pageW-margin, y);
-  y += 5;
+  y += 6;
 
-  function secHdr(num, title) {
-    if (y > 265) { doc.addPage(); y = margin; }
-    doc.setFillColor(238,238,238); doc.rect(margin, y-3.5, pageW-margin*2, 7, 'F');
-    doc.setFillColor(232,132,44); doc.rect(margin, y-3.5, 1.2, 7, 'F');
-    doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30); doc.setFontSize(10);
-    doc.text(num + '. ' + title, margin+3, y+1.2);
-    y += 7;
-  }
-  function lbl(label, val, x, width) {
+  // Job details block
+  var j = jobObj();
+  var col = cw / 2;
+  function lbl(label, val, x, w) {
     doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(90,90,90);
-    doc.text((label||'').toUpperCase(), x, y);
+    doc.text(label.toUpperCase(), x, y);
     doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(30,30,30);
-    var lines = doc.splitTextToSize(val || '—', width);
+    var lines = doc.splitTextToSize(val || '—', w);
     doc.text(lines, x, y+3.8);
     return lines.length;
   }
-  function checkPage(need){ if (y + need > 285) { doc.addPage(); y = margin; } }
-
-  // SECTION 1 - Job
-  secHdr(1, 'Job and details');
-  var j = jobObj();
-  var col = (pageW - margin*2) / 2;
-  lbl('Job code', v('fJob'), margin, col-2);
-  lbl('Project', j ? j.name : '', margin+col, col-2);
+  lbl('Job code', v('fJob'), margin, col-4);
+  lbl('Project', j ? j.name : '', margin+col, col-4);
   y += 9;
-  lbl('Builder', j ? j.builder : '', margin, col-2);
-  lbl('Site', j ? j.site : '', margin+col, col-2);
-  y += 10;
-  lbl('Date', v('fDate'), margin, col-2);
-  lbl('Site manager', v('fSm'), margin+col, col-2);
-  y += 10;
-  lbl('Testing company', v('fCompany'), margin, col-2);
-  lbl('Cert / Licence no.', v('fLic'), margin+col, col-2);
-  y += 10;
+  lbl('Builder', j ? j.builder : '', margin, col-4);
+  lbl('Site', j ? j.site : '', margin+col, col-4);
+  y += 9;
+  var col3 = cw / 3;
+  lbl('Date', v('fDate'), margin, col3-4);
+  lbl('Site manager', v('fSm'), margin+col3, col3-4);
+  lbl('Testing company', v('fCompany'), margin+col3*2, col3-4);
+  y += 9;
+  lbl('Cert / Licence no.', v('fLic'), margin, col-4);
+  y += 9;
 
-  // SECTION 2 - Tools tested table
-  checkPage(30);
-  secHdr(2, 'Tools tested');
-  var colX = {
-    num: margin+1,
-    model: margin+8,
-    corded: margin+78,
-    battery: margin+95,
-    tag: margin+115,
-    plant: margin+150,
-    end: pageW-margin
-  };
-  doc.setFillColor(245,245,245); doc.rect(margin, y-3, pageW-margin*2, 6, 'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(90,90,90);
-  doc.text('#', colX.num, y+0.8);
-  doc.text('TOOL MAKE AND MODEL', colX.model, y+0.8);
-  doc.text('CORDED', colX.corded, y+0.8);
-  doc.text('BATTERY', colX.battery, y+0.8);
-  doc.text('TAG NO.', colX.tag, y+0.8);
-  doc.text('PLANT/ITEM', colX.plant, y+0.8);
+  doc.setDrawColor(200,200,200); doc.setLineWidth(0.2); doc.line(margin, y, pageW-margin, y);
   y += 5;
 
+  // Table header
+  var cols = {
+    num:   { x: margin,      w: 8  },
+    model: { x: margin+9,    w: 72 },
+    power: { x: margin+82,   w: 20 },
+    tag:   { x: margin+103,  w: 40 },
+    plant: { x: margin+144,  w: 38 }
+  };
+  doc.setFillColor(238,238,238); doc.rect(margin, y-3.5, cw, 7, 'F');
+  doc.setFillColor(232,132,44); doc.rect(margin, y-3.5, 1.2, 7, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(90,90,90);
+  doc.text('#',                    cols.num.x+1,   y+0.8);
+  doc.text('TOOL MAKE AND MODEL',  cols.model.x,   y+0.8);
+  doc.text('CORDED/BATT',          cols.power.x,   y+0.8);
+  doc.text('TAG NO.',              cols.tag.x,     y+0.8);
+  doc.text('PLANT NO.',            cols.plant.x,   y+0.8);
+  y += 7;
+
+  // Rows
   doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(30,30,30);
-  var ix = 0, any = false;
-  document.querySelectorAll('#itemList .item').forEach(function(it) {
-    var model = it.querySelector('.i-model').value;
-    var power = it.querySelector('.i-power').value;
-    var tag = it.querySelector('.i-tag').value;
-    var plant = it.querySelector('.i-plant').value;
-    if (!model && !tag) return;
-    ix++; any = true;
-    checkPage(10);
-    doc.text(String(ix), colX.num, y+2.5);
-    var mLines = doc.splitTextToSize(model || '—', 68);
-    doc.text(mLines, colX.model, y+2.5);
-    doc.setFont('helvetica','bold');
-    if (power === 'Corded') { doc.setTextColor(36,73,122); doc.text('X', colX.corded+5, y+2.5); }
-    else { doc.setTextColor(200,200,200); doc.text('—', colX.corded+5, y+2.5); }
-    if (power === 'Battery') { doc.setTextColor(26,107,63); doc.text('X', colX.battery+5, y+2.5); }
-    else { doc.setTextColor(200,200,200); doc.text('—', colX.battery+5, y+2.5); }
-    doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
-    doc.text(tag || '—', colX.tag, y+2.5);
-    doc.text(plant || '—', colX.plant, y+2.5);
-    var rowH = Math.max(6, mLines.length*4+2);
-    doc.setDrawColor(220,220,220); doc.line(margin, y+rowH-0.5, pageW-margin, y+rowH-0.5);
+  var rows = getRows();
+  rows.forEach(function(r) {
+    if (y > 275) { doc.addPage(); y = margin; }
+    var mLines = doc.splitTextToSize(r.model || '—', cols.model.w);
+    var rowH = Math.max(6, mLines.length * 4.5);
+    var mid = y + rowH/2 - 0.5;
+
+    doc.text(String(r.num), cols.num.x+1, mid);
+    doc.text(mLines, cols.model.x, y + 4);
+
+    // Power indicator
+    if (r.power) {
+      doc.setFont('helvetica','bold');
+      if (r.power === 'Corded')  { doc.setTextColor(36,73,122);  doc.text('Corded',  cols.power.x, mid); }
+      if (r.power === 'Battery') { doc.setTextColor(26,107,63);  doc.text('Battery', cols.power.x, mid); }
+      doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
+    } else {
+      doc.setTextColor(180,180,180); doc.text('—', cols.power.x, mid); doc.setTextColor(30,30,30);
+    }
+
+    doc.text(r.tag   || '—', cols.tag.x,   mid);
+    doc.text(r.plant || '—', cols.plant.x, mid);
+    doc.setDrawColor(220,220,220); doc.line(margin, y+rowH, pageW-margin, y+rowH);
     y += rowH;
   });
-  if (!any) { doc.setTextColor(120,120,120); doc.text('(No items recorded)', colX.model, y+2.5); y += 6; doc.setTextColor(30,30,30); }
 
-  y += 2;
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(90,90,90);
-  doc.text('Total tools tested: ' + ix, margin, y);
-  y += 6;
+  if (!rows.length) {
+    doc.setTextColor(140,140,140); doc.text('(No items recorded)', cols.model.x, y+4);
+    y += 8; doc.setTextColor(30,30,30);
+  }
 
-  // FOOTER
+  y += 3;
+  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,90,90);
+  doc.text('Total items: ' + rows.length, margin, y);
+
+  // Footer on all pages
   var pages = doc.internal.getNumberOfPages();
   for (var p = 1; p <= pages; p++) {
     doc.setPage(p);
@@ -433,9 +461,7 @@ function buildPDF() {
 }
 
 function buildFilename() {
-  var job = v('fJob') || 'NoJob';
-  var date = v('fDate') || new Date().toISOString().slice(0,10);
-  return 'Test_and_Tag_' + job + '_' + date + '.pdf';
+  return 'Test_and_Tag_' + (v('fJob') || 'NoJob') + '_' + (v('fDate') || new Date().toISOString().slice(0,10)) + '.pdf';
 }
 function setStatus(msg, kind) {
   var s = document.getElementById('status');
@@ -448,38 +474,36 @@ async function generateAndSend() {
     var to = v('fToEmail');
     if (!to) { setStatus('No builder email set. Pick a job or enter manually.', 'err'); return; }
     var cc = v('fCcEmail');
-    var doc = buildPDF();
-    var filename = buildFilename();
+    var doc = buildPDF(); var filename = buildFilename();
     var blob = doc.output('blob');
-    var file = new File([blob], filename, {type: 'application/pdf'});
+    var file = new File([blob], filename, {type:'application/pdf'});
     var j = jobObj();
-    var subject = 'Test & Tag — ' + (v('fJob') || '') + ' ' + (j ? j.name : '') + ' — ' + (v('fDate') || '');
+    var subject = 'Test & Tag — ' + (v('fJob')||'') + ' ' + (j ? j.name : '') + ' — ' + (v('fDate')||'');
     var body = 'Please find attached the completed Test & Tag register.\n\n'
-      + 'Job: ' + (v('fJob') || '—') + (j ? ' — ' + j.name : '') + '\n'
-      + 'Date: ' + (v('fDate') || '—') + '\n'
-      + 'Testing company: ' + (v('fCompany') || '—') + '\n'
-      + 'Cert/Licence: ' + (v('fLic') || '—') + '\n\n'
+      + 'Job: ' + (v('fJob')||'—') + (j ? ' — '+j.name : '') + '\n'
+      + 'Date: ' + (v('fDate')||'—') + '\n'
+      + 'Testing company: ' + (v('fCompany')||'—') + '\n'
+      + 'Cert/Licence: ' + (v('fLic')||'—') + '\n\n'
       + 'Regards,\nBarzen Projects';
-
     if (navigator.canShare && navigator.canShare({files:[file]})) {
-      try { await navigator.share({ files:[file], title: subject, text: body });
-            setStatus('Shared. Confirm ' + to + (cc ? ' (CC ' + cc + ')' : '') + ' in email.', 'ok'); return;
-      } catch (e) {}
+      try { await navigator.share({files:[file], title:subject, text:body});
+            setStatus('Shared. Confirm ' + to + (cc?' (CC '+cc+')':'') + ' in email.', 'ok'); return;
+      } catch(e) {}
     }
     doc.save(filename);
-    var href = 'mailto:' + encodeURIComponent(to) + (cc ? '?cc=' + encodeURIComponent(cc) + '&' : '?') + 'subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(body + '\n\n[Attach the downloaded "' + filename + '" before sending.]');
+    var href = 'mailto:' + encodeURIComponent(to) + (cc?'?cc='+encodeURIComponent(cc)+'&':'?')
+      + 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body+'\n\n[Attach the downloaded "'+filename+'" before sending.]');
     setTimeout(function(){ window.location.href = href; }, 400);
     setStatus('PDF downloaded. Email app opening — attach the PDF manually.', 'ok');
-  } catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
+  } catch(err) { console.error(err); setStatus('Error: '+err.message, 'err'); }
 }
 function generateAndDownload() {
-  try { var doc = buildPDF(); doc.save(buildFilename()); setStatus('PDF downloaded.', 'ok'); }
-  catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
+  try { buildPDF().save(buildFilename()); setStatus('PDF downloaded.', 'ok'); }
+  catch(err) { console.error(err); setStatus('Error: '+err.message, 'err'); }
 }
 function previewPDF() {
-  try { var doc = buildPDF(); window.open(doc.output('bloburl'), '_blank'); }
-  catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
+  try { window.open(buildPDF().output('bloburl'), '_blank'); }
+  catch(err) { console.error(err); setStatus('Error: '+err.message, 'err'); }
 }
 </script>
 </body>
