@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+<title>Toolbox Talk — Barzen</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --orange: #e8842c;
+    --dark: #3a3a3a;
+    --label: #444;
+    --muted: #666;
+    --input-bg: #f5f5f5;
+    --border: #ccc;
+    --section-bg: #eee;
+    --white: #fff;
+    --green: #1a6b3f;
+    --red: #c62828;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: #f0f0f0;
+    color: var(--dark);
+    -webkit-text-size-adjust: 100%;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  .page { max-width: 640px; margin: 0 auto; padding: 10px; }
+
+  .hdr {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    border-top: 4px solid var(--orange);
+  }
+  .hdr-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .logo-b {
+    width: 40px; height: 44px;
+    background: var(--dark); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .logo-b span { font-size: 30px; font-weight: 800; color: var(--orange); font-family: Arial; }
+  .logo-txt { font-size: 22px; font-weight: 800; color: var(--dark); font-family: Arial; }
+  .logo-txt small { display: block; font-size: 10px; font-weight: 400; letter-spacing: 5px; color: var(--muted); }
+  .hdr h1 { font-size: 20px; font-weight: 700; }
+  .hdr-meta { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.7; }
+
+  .card {
+    background: var(--white); border-radius: 12px;
+    margin-bottom: 10px; overflow: hidden;
+  }
+  .card-hd {
+    background: var(--section-bg); padding: 12px 16px;
+    border-left: 4px solid var(--orange);
+    font-size: 15px; font-weight: 700;
+  }
+  .card-bd { padding: 14px 16px; }
+
+  .fld { margin-bottom: 14px; }
+  .fld-lbl {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    color: var(--label); letter-spacing: .3px; margin-bottom: 6px; display: block;
+  }
+  .fld-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 14px 12px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--dark);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .fld-input:focus { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(232,132,44,.2); }
+  select.fld-input {
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' fill='none' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+  }
+  textarea.fld-input { resize: vertical; min-height: 80px; }
+  .fld-row { display: flex; gap: 10px; }
+  .fld-row .fld { flex: 1; min-width: 0; }
+
+  .auto-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .auto-hint b { color: var(--dark); }
+
+  .chk {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid #f0f0f0;
+  }
+  .chk:last-of-type { border-bottom: none; }
+  .chk input[type="checkbox"] {
+    width: 24px; height: 24px; min-width: 24px;
+    margin-top: 2px; accent-color: var(--orange); cursor: pointer;
+  }
+  .chk-body { flex: 1; }
+  .chk-txt { font-size: 15px; font-weight: 500; line-height: 1.4; }
+  .chk.done .chk-txt { text-decoration: line-through; color: var(--muted); }
+
+  .att-row {
+    display: flex; gap: 8px; margin-bottom: 8px; align-items: center;
+  }
+  .att-row .att-num {
+    width: 24px; height: 24px; background: var(--section-bg);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .att-row select, .att-row input {
+    flex: 1; background: var(--input-bg); border: 1px solid #ddd;
+    border-radius: 8px; padding: 12px; font-size: 15px; font-family: inherit;
+    outline: none; min-width: 0;
+  }
+  .att-row .att-remove {
+    flex: 0 0 34px; background: transparent; color: var(--red);
+    border: 1px solid #e8bcba; border-radius: 8px; padding: 8px;
+    font-size: 16px; font-family: inherit; cursor: pointer;
+  }
+  .att-custom { display: none; }
+  .att-custom.on { display: flex; gap: 8px; align-items: center; margin-top: 6px; margin-left: 32px; }
+
+  .add-row-btn {
+    width: 100%; background: transparent; color: var(--orange);
+    border: 1px dashed var(--orange); padding: 12px; border-radius: 8px;
+    font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
+    margin-top: 6px;
+  }
+
+  .btn-email {
+    display: flex; width: 100%; background: var(--green); color: var(--white);
+    border: none; padding: 18px; border-radius: 12px;
+    font-size: 17px; font-weight: 700; font-family: inherit;
+    cursor: pointer; margin-top: 10px;
+    align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-email:active { opacity: .85; }
+  .btn-email svg { width: 22px; height: 22px; fill: white; }
+  .btn-secondary {
+    display: block; width: 100%; background: var(--orange); color: var(--white);
+    border: none; padding: 14px; border-radius: 12px;
+    font-size: 15px; font-weight: 600; font-family: inherit;
+    cursor: pointer; margin-top: 8px;
+  }
+  .btn-outline {
+    display: block; width: 100%; background: var(--white); color: var(--dark);
+    border: 1px solid var(--border); padding: 13px; border-radius: 12px;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    cursor: pointer; margin-top: 8px;
+  }
+  .status {
+    margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+    font-size: 13px; display: none;
+  }
+  .status.ok { background: #eaf5ee; color: var(--green); border: 1px solid #bfe0cc; display: block; }
+  .status.err { background: #fcebea; color: var(--red); border: 1px solid #e8bcba; display: block; }
+  .footer { display:flex; justify-content:space-between; margin-top:14px; padding:10px 0; font-size:11px; color:var(--muted); }
+
+  @media(max-width:480px) {
+    .fld-row { flex-direction: column; gap: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="logo-b"><span>B</span></div>
+      <div class="logo-txt">arzen<small>P r o j e c t s</small></div>
+    </div>
+    <h1>Toolbox Talk Record</h1>
+    <div class="hdr-meta">Form BP-WHS-F02 | Rev 2 — Brief crews, capture actions, record attendance.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">1. Job</div>
+    <div class="card-bd">
+      <div class="fld">
+        <span class="fld-lbl">JOB</span>
+        <select class="fld-input" id="fJob" onchange="applyJob()">
+          <option value="">Select job...</option>
+        </select>
+        <div class="auto-hint" id="jobHint"></div>
+      </div>
+      <div class="fld-row">
+        <div class="fld"><span class="fld-lbl">DATE</span><input type="date" class="fld-input" id="fDate"></div>
+        <div class="fld"><span class="fld-lbl">START</span><input type="time" class="fld-input" id="fStart"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">2. People</div>
+    <div class="card-bd">
+      <div class="fld">
+        <span class="fld-lbl">FACILITATOR</span>
+        <select class="fld-input" id="fFac">
+          <option value="">Select...</option>
+        </select>
+      </div>
+      <div class="fld">
+        <span class="fld-lbl">SITE MANAGER</span>
+        <select class="fld-input" id="fSup">
+          <option value="">Select...</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">3. Topic</div>
+    <div class="card-bd">
+      <div class="fld">
+        <span class="fld-lbl">TOPIC</span>
+        <select class="fld-input" id="fTopicSel" onchange="topicChange()">
+          <option value="">Select or type below...</option>
+          <option>Working at heights</option>
+          <option>Manual handling</option>
+          <option>Hazardous substances</option>
+          <option>Electrical safety</option>
+          <option>Power tools</option>
+          <option>PPE — correct use</option>
+          <option>Slips, trips and falls</option>
+          <option>Housekeeping</option>
+          <option>Emergency procedures</option>
+          <option>Site induction refresher</option>
+          <option>SWMS review</option>
+          <option>Incident / near miss debrief</option>
+          <option>Fatigue management</option>
+          <option>Hot works</option>
+          <option>Confined space</option>
+          <option>Traffic management</option>
+          <option>Other (type below)</option>
+        </select>
+      </div>
+      <div class="fld"><span class="fld-lbl">DETAIL (optional)</span><input type="text" class="fld-input" id="fTopic" placeholder="Specific topic description"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">4. Key points covered</div>
+    <div class="card-bd" id="stdList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">5. Discussion and site-specific notes</div>
+    <div class="card-bd">
+      <div class="fld">
+        <textarea class="fld-input" id="fDisc" placeholder="Site-specific hazards, PPE, SWMS, crew questions, agreed actions..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">6. Attendance</div>
+    <div class="card-bd">
+      <div id="attList"></div>
+      <button class="add-row-btn" onclick="addAttendee()">+ Add attendee</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">7. Send</div>
+    <div class="card-bd">
+      <div class="fld"><span class="fld-lbl">SEND TO (BUILDER)</span><input type="email" class="fld-input" id="fToEmail" placeholder="Auto-filled from job"></div>
+      <div class="fld"><span class="fld-lbl">CC</span><input type="email" class="fld-input" id="fCcEmail" value="cal@barzenprojects.com.au"></div>
+    </div>
+  </div>
+
+  <button class="btn-email" onclick="generateAndSend()">
+    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    Generate PDF &amp; Email
+  </button>
+  <button class="btn-secondary" onclick="generateAndDownload()">Download PDF Only</button>
+  <button class="btn-outline" onclick="previewPDF()">Preview PDF</button>
+  <div id="status" class="status"></div>
+
+  <div class="footer"><span>Barzen Projects</span><span>BP-WHS-F02 | Rev 2</span></div>
+</div>
+
+<script>
+/* ---- DATA ---- */
+var JOBS = [
+  {code:'BC04',   name:'Candela',                 builder:'Ironside', site:'40 Upper Heidelberg Road, Ivanhoe, VIC',                       mgr:'Adam Coulter',    to:'m.lagreca@ironside.com.au',     cc:'o.tulloch@ironside.com.au'},
+  {code:'BP1023', name:'Richmond East (Fortis)',  builder:'Hacer',    site:'2-8 Brighton Street, Richmond VIC',                            mgr:'Rhys Smith',      to:'cchisholm@hacer.com.au',        cc:'AHarriss@hacer.com.au'},
+  {code:'BP1024', name:'IGLU',                    builder:'Kane',     site:'360 William Street, Melbourne VIC 3000',                       mgr:'Rikki Brownrigg', to:'nmartin@kane.com.au',           cc:'PMunro@kane.com.au'},
+  {code:'BP1025', name:'The Canopy',              builder:'Crema',    site:'272 Normanby Road, South Melbourne VIC 3205',                  mgr:'Michael Maugeri', to:'buds.beluli@crema.com.au',      cc:'austin.kwon@crema.com.au'},
+  {code:'BP1033', name:'Trielle Tower 9',         builder:'Mirvac',   site:'118-122 South Wharf Drive, Docklands VIC 3008',                mgr:'Conan Ross',      to:'ben.bailey@mirvac.com',         cc:'jack.royle@mirvac.com'},
+  {code:'BP1034', name:'NEL — NVS',               builder:'Spark',    site:'Northern Ventilation Structure, Yallambie VIC 3085',           mgr:'Adam Coulter',    to:'Kedi.Dong@sparknel-dc.com.au',  cc:'Hayley.Catherine@sparknel-dc.com.au'},
+  {code:'BP1036', name:'NEL — SVS',               builder:'Spark',    site:'162-168 Bulleen Road, Bulleen VIC 3105',                       mgr:'Adam Coulter',    to:'david.oshea@sparknel-dc.com.au',cc:'Hayley.Catherine@sparknel-dc.com.au'},
+  {code:'BP1037', name:'Jam Factory Stage 1',     builder:'Crema',    site:'500 Chapel Street, South Yarra VIC 3141',                      mgr:'Michael Maugeri', to:'huw.richardson@crema.com.au',   cc:'nathan.katona@crema.com.au'},
+  {code:'BQ02',   name:'Tannum Sands',            builder:'Paynters', site:'75 Tannum Sands Road, Tannum Sands QLD',                       mgr:'Declan Mc Atee',  to:'shane.godbold@paynters.com.au', cc:'brenton.tovey@paynters.com.au'}
+];
+var STAFF = [
+  'Cal Crane','Ethan Barzen','Michelle',
+  'Rhys Smith','Jarrad Cootee','Conan Ross','George Sahindis',
+  'Jack Burke','Joshua Groves','Rikki Brownrigg','Adam Coulter',
+  'Chang Lin Wong','Kheng Sin Eh Dam','WeiJin Ng','Declan Mc Atee',
+  'Joel Easson','Michael Jones','Ryan Lewis','Cheng (Jasper) Liu',
+  'Gareth Porter','Shitao Yang','Peter Sheehan','Michael Maugeri',
+  'Thomas Sheehan','Macauley Braithwaite','Boshi (Scotty) Liu',
+  'Other (type name)'
+];
+var STD_POINTS = [
+  'All injuries and near misses reported immediately.',
+  'Site Manager / Supervisor notified of any incident.',
+  'First aid provided by designated first aider.',
+  'Ambulance / approved transport only for medical treatment.',
+  'SWMS reviewed and signed by all crew on site.',
+  'Correct PPE confirmed for the task.',
+  'Permits in place (hot work, confined space, WAH) where required.',
+  'Emergency muster point and evacuation route identified.'
+];
+
+/* ---- BUILD ---- */
+function populateJobs() {
+  var sel = document.getElementById('fJob');
+  JOBS.forEach(function(j) {
+    var o = document.createElement('option');
+    o.value = j.code; o.textContent = j.code + ' — ' + j.name;
+    sel.appendChild(o);
+  });
+}
+function populateStaff(sel, includeOther) {
+  STAFF.forEach(function(s) {
+    if (!includeOther && s === 'Other (type name)') return;
+    var o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    sel.appendChild(o);
+  });
+}
+function buildStd() {
+  var c = document.getElementById('stdList');
+  STD_POINTS.forEach(function(txt) {
+    var div = document.createElement('div'); div.className = 'chk';
+    div.innerHTML = '<input type="checkbox" onchange="this.closest(\'.chk\').classList.toggle(\'done\',this.checked)">'
+      + '<div class="chk-body"><div class="chk-txt">' + txt + '</div></div>';
+    c.appendChild(div);
+  });
+}
+
+var attSeq = 0;
+function addAttendee(defaultName) {
+  attSeq++;
+  var c = document.getElementById('attList');
+  var row = document.createElement('div'); row.className = 'att-row';
+  row.innerHTML =
+    '<div class="att-num">' + attSeq + '</div>'
+    + '<select class="att-sel">'
+    + '<option value="">Select name...</option>'
+    + STAFF.map(function(s){ return '<option>' + s + '</option>'; }).join('')
+    + '</select>'
+    + '<button class="att-remove" type="button" title="Remove">×</button>';
+  c.appendChild(row);
+  var customWrap = document.createElement('div'); customWrap.className = 'att-custom';
+  customWrap.innerHTML = '<input type="text" class="att-custom-name" placeholder="Type name"><input type="text" class="att-custom-co" placeholder="Company">';
+  c.insertBefore(customWrap, row.nextSibling);
+  row._custom = customWrap;
+  row.querySelector('.att-sel').addEventListener('change', function(e) {
+    if (e.target.value === 'Other (type name)') customWrap.classList.add('on');
+    else customWrap.classList.remove('on');
+  });
+  row.querySelector('.att-remove').addEventListener('click', function() {
+    row.remove(); customWrap.remove(); renumber();
+  });
+  if (defaultName) { row.querySelector('.att-sel').value = defaultName; }
+}
+function renumber() {
+  var n = 0;
+  document.querySelectorAll('#attList .att-row').forEach(function(r) {
+    n++; r.querySelector('.att-num').textContent = n;
+  });
+  attSeq = n;
+}
+
+function applyJob() {
+  var code = document.getElementById('fJob').value;
+  var j = JOBS.find(function(x){ return x.code === code; });
+  if (!j) { document.getElementById('jobHint').innerHTML = ''; return; }
+  document.getElementById('jobHint').innerHTML = '<b>' + j.builder + '</b> — ' + j.site;
+  document.getElementById('fToEmail').value = j.to || '';
+  // Site manager preselect (if in staff list)
+  var supSel = document.getElementById('fSup');
+  var match = Array.prototype.slice.call(supSel.options).find(function(o){ return o.value === j.mgr; });
+  if (match) supSel.value = j.mgr;
+}
+function topicChange() {
+  var v = document.getElementById('fTopicSel').value;
+  if (v && v !== 'Other (type below)') {
+    var inp = document.getElementById('fTopic');
+    if (!inp.value) inp.value = v;
+  }
+}
+
+populateJobs();
+populateStaff(document.getElementById('fFac'), false);
+populateStaff(document.getElementById('fSup'), false);
+buildStd();
+for (var i = 0; i < 4; i++) addAttendee();
+document.getElementById('fDate').valueAsDate = new Date();
+
+/* ---- PDF GENERATION ---- */
+function v(id) { return (document.getElementById(id).value || '').trim(); }
+function jobObj() { return JOBS.find(function(x){ return x.code === v('fJob'); }); }
+
+function buildPDF() {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({unit:'mm', format:'a4'});
+  var pageW = 210, margin = 14;
+  var y = margin;
+
+  doc.setFillColor(232,132,44); doc.rect(0,0,pageW,3,'F');
+  doc.setFillColor(58,58,58); doc.rect(margin, y, 10, 11, 'F');
+  doc.setFont('helvetica','bold'); doc.setTextColor(232,132,44); doc.setFontSize(14); doc.text('B', margin+2.8, y+8.3);
+  doc.setTextColor(58,58,58); doc.setFontSize(16); doc.text('arzen', margin+11, y+7);
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(120,120,120); doc.text('P R O J E C T S', margin+11, y+10);
+  doc.setFontSize(8); doc.setTextColor(90,90,90);
+  doc.text('BP-WHS-F02 | Rev 2', pageW-margin, y+5, {align:'right'});
+  doc.text('Controlled form', pageW-margin, y+9, {align:'right'});
+
+  y += 14;
+  doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30); doc.setFontSize(15);
+  doc.text('Toolbox Talk Record', margin, y);
+  y += 5;
+  doc.setDrawColor(232,132,44); doc.setLineWidth(0.4); doc.line(margin, y, pageW-margin, y);
+  y += 5;
+
+  function secHdr(num, title) {
+    if (y > 265) { doc.addPage(); y = margin; }
+    doc.setFillColor(238,238,238); doc.rect(margin, y-3.5, pageW-margin*2, 7, 'F');
+    doc.setFillColor(232,132,44); doc.rect(margin, y-3.5, 1.2, 7, 'F');
+    doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30); doc.setFontSize(10);
+    doc.text(num + '. ' + title, margin+3, y+1.2);
+    y += 7;
+  }
+  function lbl(label, val, x, width) {
+    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(90,90,90);
+    doc.text((label||'').toUpperCase(), x, y);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(30,30,30);
+    var lines = doc.splitTextToSize(val || '—', width);
+    doc.text(lines, x, y+3.8);
+    return lines.length;
+  }
+  function checkPage(need){ if (y + need > 285) { doc.addPage(); y = margin; } }
+
+  // SECTION 1 - Job
+  secHdr(1, 'Job and meeting');
+  var j = jobObj();
+  var col = (pageW - margin*2) / 2;
+  lbl('Job code', v('fJob'), margin, col-2);
+  lbl('Project', j ? j.name : '', margin+col, col-2);
+  y += 9;
+  lbl('Builder', j ? j.builder : '', margin, col-2);
+  lbl('Site', j ? j.site : '', margin+col, col-2);
+  y += 10;
+  var col3 = (pageW - margin*2) / 3;
+  lbl('Date', v('fDate'), margin, col3-2);
+  lbl('Start time', v('fStart'), margin+col3, col3-2);
+  lbl('Site manager', v('fSup'), margin+col3*2, col3-2);
+  y += 10;
+  lbl('Facilitator', v('fFac'), margin, col-2);
+  var topic = v('fTopic') || v('fTopicSel');
+  lbl('Topic', topic, margin+col, col-2);
+  y += 10;
+
+  // SECTION 2 - Key points
+  checkPage(50);
+  secHdr(2, 'Key points covered');
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(30,30,30);
+  document.querySelectorAll('#stdList .chk').forEach(function(chk) {
+    checkPage(6);
+    var cb = chk.querySelector('input[type="checkbox"]').checked;
+    var txt = chk.querySelector('.chk-txt').textContent;
+    doc.setDrawColor(100,100,100); doc.setLineWidth(0.3);
+    doc.rect(margin, y-3, 3.5, 3.5);
+    if (cb) { doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('X', margin+0.7, y-0.4); doc.setFont('helvetica','normal'); doc.setFontSize(9); }
+    var lines = doc.splitTextToSize(txt, pageW - margin*2 - 6);
+    doc.text(lines, margin+6, y);
+    y += Math.max(5, lines.length*4.2);
+  });
+
+  // SECTION 3 - Discussion
+  var disc = v('fDisc');
+  if (disc) {
+    y += 2; checkPage(20);
+    secHdr(3, 'Discussion and site-specific notes');
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(30,30,30);
+    var dLines = doc.splitTextToSize(disc, pageW - margin*2);
+    doc.text(dLines, margin, y);
+    y += dLines.length*4 + 3;
+  }
+
+  // SECTION 4 - Attendance
+  checkPage(40);
+  secHdr(4, 'Attendance register');
+  doc.setFillColor(245,245,245); doc.rect(margin, y-3, pageW-margin*2, 6, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(90,90,90);
+  doc.text('#', margin+1, y+0.8);
+  doc.text('NAME', margin+7, y+0.8);
+  doc.text('COMPANY', pageW-margin-60, y+0.8);
+  y += 5;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(30,30,30);
+  var anyAtt = false, idx = 0;
+  document.querySelectorAll('#attList .att-row').forEach(function(row) {
+    var sel = row.querySelector('.att-sel').value;
+    var cust = row._custom;
+    var name = '', co = '';
+    if (sel === 'Other (type name)' && cust) {
+      name = cust.querySelector('.att-custom-name').value || '';
+      co = cust.querySelector('.att-custom-co').value || '';
+    } else if (sel) {
+      name = sel; co = 'Barzen Projects';
+    }
+    if (!name) return;
+    idx++; anyAtt = true;
+    checkPage(6);
+    doc.text(String(idx), margin+1, y+2.5);
+    doc.text(name, margin+7, y+2.5);
+    doc.text(co || '—', pageW-margin-60, y+2.5);
+    doc.setDrawColor(220,220,220); doc.line(margin, y+5, pageW-margin, y+5);
+    y += 6;
+  });
+  if (!anyAtt) { doc.setTextColor(120,120,120); doc.text('(No attendees recorded)', margin+7, y+2.5); y += 6; doc.setTextColor(30,30,30); }
+
+  // FOOTER
+  var pages = doc.internal.getNumberOfPages();
+  for (var p = 1; p <= pages; p++) {
+    doc.setPage(p);
+    doc.setDrawColor(232,132,44); doc.setLineWidth(0.3);
+    doc.line(margin, 287, pageW-margin, 287);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(120,120,120);
+    doc.text('Barzen Projects — Controlled form', margin, 291);
+    doc.text('BP-WHS-F02 | Rev 2', pageW/2, 291, {align:'center'});
+    doc.text('Page ' + p + ' of ' + pages, pageW-margin, 291, {align:'right'});
+  }
+  return doc;
+}
+
+function buildFilename() {
+  var job = v('fJob') || 'NoJob';
+  var date = v('fDate') || new Date().toISOString().slice(0,10);
+  return 'Toolbox_Talk_' + job + '_' + date + '.pdf';
+}
+function setStatus(msg, kind) {
+  var s = document.getElementById('status');
+  s.className = 'status ' + (kind || 'ok');
+  s.textContent = msg;
+}
+
+async function generateAndSend() {
+  try {
+    var to = v('fToEmail');
+    if (!to) { setStatus('No builder email set. Pick a job or enter manually.', 'err'); return; }
+    var cc = v('fCcEmail');
+    var doc = buildPDF();
+    var filename = buildFilename();
+    var blob = doc.output('blob');
+    var file = new File([blob], filename, {type: 'application/pdf'});
+    var j = jobObj();
+    var subject = 'Toolbox Talk — ' + (v('fJob') || '') + ' ' + (j ? j.name : '') + ' — ' + (v('fDate') || '');
+    var body = 'Please find attached the completed Toolbox Talk record.\n\n'
+      + 'Job: ' + (v('fJob') || '—') + (j ? ' — ' + j.name : '') + '\n'
+      + 'Date: ' + (v('fDate') || '—') + '\n'
+      + 'Topic: ' + (v('fTopic') || v('fTopicSel') || '—') + '\n'
+      + 'Facilitator: ' + (v('fFac') || '—') + '\n\n'
+      + 'Regards,\nBarzen Projects';
+
+    if (navigator.canShare && navigator.canShare({files:[file]})) {
+      try { await navigator.share({ files:[file], title: subject, text: body });
+            setStatus('Shared. Confirm ' + to + (cc ? ' (CC ' + cc + ')' : '') + ' in email.', 'ok'); return;
+      } catch (e) {}
+    }
+    doc.save(filename);
+    var href = 'mailto:' + encodeURIComponent(to) + (cc ? '?cc=' + encodeURIComponent(cc) + '&' : '?') + 'subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body + '\n\n[Attach the downloaded "' + filename + '" before sending.]');
+    setTimeout(function(){ window.location.href = href; }, 400);
+    setStatus('PDF downloaded. Email app opening — attach the PDF manually.', 'ok');
+  } catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
+}
+function generateAndDownload() {
+  try { var doc = buildPDF(); doc.save(buildFilename()); setStatus('PDF downloaded.', 'ok'); }
+  catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
+}
+function previewPDF() {
+  try { var doc = buildPDF(); window.open(doc.output('bloburl'), '_blank'); }
+  catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
+}
+</script>
+</body>
+</html>
