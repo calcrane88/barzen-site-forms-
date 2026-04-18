@@ -288,11 +288,11 @@ var JOBS = [
   {code:'BC04',   name:'Candela',                 builder:'Ironside', site:'40 Upper Heidelberg Road, Ivanhoe, VIC',                       mgr:'Adam Coulter',    to:'m.lagreca@ironside.com.au',     cc:'o.tulloch@ironside.com.au'},
   {code:'BP1023', name:'Richmond East (Fortis)',  builder:'Hacer',    site:'2-8 Brighton Street, Richmond VIC',                            mgr:'Rhys Smith',      to:'cchisholm@hacer.com.au',        cc:'AHarriss@hacer.com.au'},
   {code:'BP1024', name:'IGLU',                    builder:'Kane',     site:'360 William Street, Melbourne VIC 3000',                       mgr:'Rikki Brownrigg', to:'nmartin@kane.com.au',           cc:'PMunro@kane.com.au'},
-  {code:'BP1025', name:'The Canopy',              builder:'Crema',    site:'272 Normanby Road, South Melbourne VIC 3205',                  mgr:'Michael Maugeri', to:'buds.beluli@crema.com.au',      cc:'austin.kwon@crema.com.au'},
+  {code:'BP1025', name:'The Canopy',              builder:'Crema',    site:'272 Normanby Road, South Melbourne VIC 3205',                  mgr:'Michael Jones',   to:'buds.beluli@crema.com.au',      cc:'austin.kwon@crema.com.au'},
   {code:'BP1033', name:'Trielle Tower 9',         builder:'Mirvac',   site:'118-122 South Wharf Drive, Docklands VIC 3008',                mgr:'Conan Ross',      to:'ben.bailey@mirvac.com',         cc:'jack.royle@mirvac.com'},
   {code:'BP1034', name:'NEL — NVS',               builder:'Spark',    site:'Northern Ventilation Structure, Yallambie VIC 3085',           mgr:'Adam Coulter',    to:'Kedi.Dong@sparknel-dc.com.au',  cc:'Hayley.Catherine@sparknel-dc.com.au'},
   {code:'BP1036', name:'NEL — SVS',               builder:'Spark',    site:'162-168 Bulleen Road, Bulleen VIC 3105',                       mgr:'Adam Coulter',    to:'david.oshea@sparknel-dc.com.au',cc:'Hayley.Catherine@sparknel-dc.com.au'},
-  {code:'BP1037', name:'Jam Factory Stage 1',     builder:'Crema',    site:'500 Chapel Street, South Yarra VIC 3141',                      mgr:'Michael Maugeri', to:'huw.richardson@crema.com.au',   cc:'nathan.katona@crema.com.au'},
+  {code:'BP1037', name:'Jam Factory Stage 1',     builder:'Crema',    site:'500 Chapel Street, South Yarra VIC 3141',                      mgr:'Michael Jones',   to:'huw.richardson@crema.com.au',   cc:'nathan.katona@crema.com.au'},
   {code:'BQ02',   name:'Tannum Sands',            builder:'Paynters', site:'75 Tannum Sands Road, Tannum Sands QLD',                       mgr:'Declan Mc Atee',  to:'shane.godbold@paynters.com.au', cc:'brenton.tovey@paynters.com.au'}
 ];
 var STAFF = [
@@ -410,42 +410,51 @@ function jobObj() { return JOBS.find(function(x){ return x.code === v('fJob'); }
 function buildPDF() {
   var jsPDF = window.jspdf.jsPDF;
   var doc = new jsPDF({unit:'mm', format:'a4'});
-  var pageW = 210, margin = 14;
-  var y = margin;
+  var pageW = 210, margin = 14, cw = pageW - margin * 2;
+  var y = 0;
 
-  doc.setFillColor(232,132,44); doc.rect(0,0,pageW,3,'F');
-  doc.setFillColor(58,58,58); doc.rect(margin, y, 10, 11, 'F');
-  doc.setFont('helvetica','bold'); doc.setTextColor(232,132,44); doc.setFontSize(14); doc.text('B', margin+2.8, y+8.3);
-  doc.setTextColor(58,58,58); doc.setFontSize(16); doc.text('arzen', margin+11, y+7);
-  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(120,120,120); doc.text('P R O J E C T S', margin+11, y+10);
-  doc.setFontSize(8); doc.setTextColor(90,90,90);
-  doc.text('BP-WHS-F02 | Rev 2', pageW-margin, y+5, {align:'right'});
-  doc.text('Controlled form', pageW-margin, y+9, {align:'right'});
+  // ── HEADER BLOCK ──────────────────────────────────────────────
+  var hdrH = 22;
+  doc.setFillColor(42, 42, 42); doc.rect(0, 0, pageW, hdrH, 'F');
+  // Orange accent bar at bottom of header
+  doc.setFillColor(232,132,44); doc.rect(0, hdrH - 2, pageW, 2, 'F');
 
-  y += 14;
-  doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30); doc.setFontSize(15);
-  doc.text('Toolbox Talk Record', margin, y);
-  y += 5;
-  doc.setDrawColor(232,132,44); doc.setLineWidth(0.4); doc.line(margin, y, pageW-margin, y);
-  y += 5;
+  // Logo: orange B square
+  doc.setFillColor(232,132,44); doc.rect(margin, 5, 9, 11, 'F');
+  doc.setFont('helvetica','bold'); doc.setTextColor(42,42,42); doc.setFontSize(13);
+  doc.text('B', margin + 2.2, 13.8);
+
+  // "arzen Projects" wordmark
+  doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255); doc.setFontSize(15);
+  doc.text('arzen', margin + 11, 13);
+  doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(180,180,180);
+  doc.text('P  R  O  J  E  C  T  S', margin + 11, 17);
+
+  // Form reference — right aligned in header
+  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(232,132,44);
+  doc.text('Toolbox Talk Record', pageW - margin, 10, {align:'right'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(160,160,160);
+  doc.text('BP-WHS-F02  |  Rev 2  |  Controlled form', pageW - margin, 15.5, {align:'right'});
+
+  y = hdrH + 8;
+  // ── END HEADER ────────────────────────────────────────────────
 
   function secHdr(num, title) {
-    if (y > 265) { doc.addPage(); y = margin; }
-    doc.setFillColor(238,238,238); doc.rect(margin, y-3.5, pageW-margin*2, 7, 'F');
-    doc.setFillColor(232,132,44); doc.rect(margin, y-3.5, 1.2, 7, 'F');
-    doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30); doc.setFontSize(10);
-    doc.text(num + '. ' + title, margin+3, y+1.2);
-    y += 7;
+    if (y > 262) { doc.addPage(); y = margin; }
+    doc.setFillColor(232,132,44); doc.rect(margin, y, cw, 7.5, 'F');
+    doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255); doc.setFontSize(9.5);
+    doc.text(num + '.  ' + title.toUpperCase(), margin + 4, y + 5.1);
+    y += 11;
   }
   function lbl(label, val, x, width) {
-    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(90,90,90);
+    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(130,130,130);
     doc.text((label||'').toUpperCase(), x, y);
     doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(30,30,30);
     var lines = doc.splitTextToSize(val || '—', width);
-    doc.text(lines, x, y+3.8);
+    doc.text(lines, x, y + 3.8);
     return lines.length;
   }
-  function checkPage(need){ if (y + need > 285) { doc.addPage(); y = margin; } }
+  function checkPage(need){ if (y + need > 282) { doc.addPage(); y = margin; } }
 
   // SECTION 1 - Job
   secHdr(1, 'Job and meeting');
@@ -530,12 +539,12 @@ function buildPDF() {
   var pages = doc.internal.getNumberOfPages();
   for (var p = 1; p <= pages; p++) {
     doc.setPage(p);
-    doc.setDrawColor(232,132,44); doc.setLineWidth(0.3);
-    doc.line(margin, 287, pageW-margin, 287);
-    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(120,120,120);
-    doc.text('Barzen Projects — Controlled form', margin, 291);
-    doc.text('BP-WHS-F02 | Rev 2', pageW/2, 291, {align:'center'});
-    doc.text('Page ' + p + ' of ' + pages, pageW-margin, 291, {align:'right'});
+    doc.setFillColor(42,42,42); doc.rect(0, 286, pageW, 11, 'F');
+    doc.setFillColor(232,132,44); doc.rect(0, 286, pageW, 1.2, 'F');
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(160,160,160);
+    doc.text('Barzen Projects  —  Controlled form', margin, 292.5);
+    doc.text('BP-WHS-F02  |  Rev 2', pageW/2, 292.5, {align:'center'});
+    doc.text('Page ' + p + ' of ' + pages, pageW - margin, 292.5, {align:'right'});
   }
   return doc;
 }
