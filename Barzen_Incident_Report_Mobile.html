@@ -738,12 +738,14 @@ async function generateAndSend() {
       + 'Incident type: ' + getToggle('incidentType') + '\n\n'
       + 'Regards,\nBarzen Projects';
     logToTradeControl();
-    doc.save(filename);
     var ccParam = cc ? cc.split(',').map(function(e){ return encodeURIComponent(e.trim()); }).join(',') : '';
     var href = 'mailto:' + encodeURIComponent(to) + (ccParam?'?cc='+ccParam+'&':'?')
       + 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body+'\n\n[Attach the downloaded "'+filename+'" before sending.]');
-    setTimeout(function(){ window.location.href = href; }, 400);
-    setStatus('PDF downloaded. Email app opening with addresses pre-filled — attach the PDF before sending.', 'ok');
+    var a = document.createElement('a');
+    a.href = href; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    doc.save(filename);
+    setStatus('Email app opening with addresses pre-filled — attach the PDF before sending.', 'ok');
   } catch(err) { console.error(err); setStatus('Error: '+err.message, 'err'); }
 }
 function generateAndDownload() {
