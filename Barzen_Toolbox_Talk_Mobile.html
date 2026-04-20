@@ -120,7 +120,8 @@
     font-size: 16px; font-family: inherit; cursor: pointer;
   }
   .att-custom { display: none; }
-  .att-custom.on { display: flex; gap: 8px; align-items: center; margin-top: 6px; margin-left: 32px; }
+  .att-custom.on { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; margin-left: 0; }
+  .att-custom.on input { width: 100%; padding: 12px; font-size: 15px; background: var(--input-bg); border: 1px solid #ddd; border-radius: 8px; font-family: inherit; outline: none; box-sizing: border-box; }
 
   .add-row-btn {
     width: 100%; background: transparent; color: var(--orange);
@@ -267,7 +268,7 @@
     <div class="card-hd">7. Send</div>
     <div class="card-bd">
       <div class="fld"><span class="fld-lbl">SEND TO (BUILDER)</span><input type="email" class="fld-input" id="fToEmail" placeholder="Auto-filled from job"></div>
-      <div class="fld"><span class="fld-lbl">CC</span><input type="email" class="fld-input" id="fCcEmail" value="cal@barzenprojects.com.au"></div>
+      <div class="fld"><span class="fld-lbl">CC</span><input type="text" class="fld-input" id="fCcEmail" value="cal@barzenprojects.com.au, admin@barzenprojects.com.au"></div>
     </div>
   </div>
 
@@ -302,6 +303,7 @@ var STAFF = [
   'Joel Easson','Michael Jones','Cheng (Jasper) Liu',
   'Gareth Porter','Shitao Yang','Peter Sheehan','Michael Maugeri',
   'Thomas Sheehan','Macauley Braithwaite','Boshi (Scotty) Liu',
+  'Ryan Lewis',
   'Other (type name)'
 ];
 var STD_POINTS = [
@@ -559,6 +561,42 @@ function setStatus(msg, kind) {
   s.textContent = msg;
 }
 
+async function logToTradeControl() {
+  try {
+    var j = jobObj();
+    var attendees = [];
+    document.querySelectorAll('#attList .att-row').forEach(function(row) {
+      var sel = row.querySelector('select');
+      var s = sel ? sel.value : '';
+      if (!s || s === 'Select name...') return;
+      if (s === 'Other (type name)') {
+        var cust = row.querySelector('.att-custom');
+        var n = cust ? (cust.querySelector('.att-custom-name').value || '') : '';
+        if (n) attendees.push(n);
+      } else { attendees.push(s); }
+    });
+    var payload = {
+      form_type: 'toolbox_talk',
+      job_code: v('fJob') || null,
+      submitted_by: v('fFac') || null,
+      data: {
+        job_code: v('fJob') || null,
+        job_name: j ? j.name : null,
+        date: v('fDate') || null,
+        topic: v('fTopic') || v('fTopicSel') || null,
+        facilitator: v('fFac') || null,
+        attendees: attendees,
+        site: j ? j.site : null,
+      }
+    };
+    await fetch('https://trade-control-ten.vercel.app/api/forms/site-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) { console.warn('TradeControl log failed (non-critical):', e); }
+}
+
 async function generateAndSend() {
   try {
     var to = v('fToEmail');
@@ -566,8 +604,6 @@ async function generateAndSend() {
     var cc = v('fCcEmail');
     var doc = buildPDF();
     var filename = buildFilename();
-    var blob = doc.output('blob');
-    var file = new File([blob], filename, {type: 'application/pdf'});
     var j = jobObj();
     var subject = 'Toolbox Talk — ' + (v('fJob') || '') + ' ' + (j ? j.name : '') + ' — ' + (v('fDate') || '');
     var body = 'Please find attached the completed Toolbox Talk record.\n\n'
@@ -577,16 +613,18 @@ async function generateAndSend() {
       + 'Facilitator: ' + (v('fFac') || '—') + '\n\n'
       + 'Regards,\nBarzen Projects';
 
-    if (navigator.canShare && navigator.canShare({files:[file]})) {
-      try { await navigator.share({ files:[file], title: subject, text: body });
-            setStatus('Shared. Confirm ' + to + (cc ? ' (CC ' + cc + ')' : '') + ' in email.', 'ok'); return;
-      } catch (e) {}
-    }
+    // Log to TradeControl (non-blocking)
+    logToTradeControl();
+
+    // Save PDF then open mail app with addresses pre-filled
     doc.save(filename);
-    var href = 'mailto:' + encodeURIComponent(to) + (cc ? '?cc=' + encodeURIComponent(cc) + '&' : '?') + 'subject=' + encodeURIComponent(subject)
+    var ccParam = cc ? cc.split(',').map(function(e){ return encodeURIComponent(e.trim()); }).join(',') : '';
+    var href = 'mailto:' + encodeURIComponent(to)
+      + (ccParam ? '?cc=' + ccParam + '&' : '?')
+      + 'subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body + '\n\n[Attach the downloaded "' + filename + '" before sending.]');
     setTimeout(function(){ window.location.href = href; }, 400);
-    setStatus('PDF downloaded. Email app opening — attach the PDF manually.', 'ok');
+    setStatus('PDF downloaded. Email app opening with addresses pre-filled — attach the PDF before sending.', 'ok');
   } catch (err) { console.error(err); setStatus('Error: ' + err.message, 'err'); }
 }
 function generateAndDownload() {

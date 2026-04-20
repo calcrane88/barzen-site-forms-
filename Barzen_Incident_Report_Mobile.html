@@ -418,7 +418,7 @@
     <div class="card-hd">Send</div>
     <div class="card-bd">
       <div class="fld"><span class="fld-lbl">SEND TO (BUILDER)</span><input type="email" class="fld-input" id="fToEmail" placeholder="Auto-filled from job"></div>
-      <div class="fld"><span class="fld-lbl">CC</span><input type="email" class="fld-input" id="fCcEmail" value="cal@barzenprojects.com.au"></div>
+      <div class="fld"><span class="fld-lbl">CC</span><input type="text" class="fld-input" id="fCcEmail" value="cal@barzenprojects.com.au, admin@barzenprojects.com.au"></div>
     </div>
   </div>
 
@@ -451,7 +451,8 @@ var STAFF = [
   'Chang Lin Wong','Kheng Sin Eh Dam','WeiJin Ng','Declan Mc Atee',
   'Joel Easson','Michael Jones','Cheng (Jasper) Liu',
   'Gareth Porter','Shitao Yang','Peter Sheehan','Michael Maugeri',
-  'Thomas Sheehan','Macauley Braithwaite','Boshi (Scotty) Liu'
+  'Thomas Sheehan','Macauley Braithwaite','Boshi (Scotty) Liu',
+  'Ryan Lewis'
 ];
 
 function populateJobs() {
@@ -697,14 +698,37 @@ function setStatus(msg, kind) {
   var s = document.getElementById('status'); s.className = 'status '+(kind||'ok'); s.textContent = msg;
 }
 
+async function logToTradeControl() {
+  try {
+    var j = jobObj();
+    var payload = {
+      form_type: 'incident_report',
+      job_code: v('fJob') || null,
+      submitted_by: v('fSiteMgr') || null,
+      data: {
+        job_code: v('fJob') || null,
+        job_name: j ? j.name : null,
+        date: v('fDate') || null,
+        person_involved: v('fPerson') || null,
+        incident_type: getToggle('incidentType') || null,
+        description: v('fDescription') || null,
+        site_manager: v('fSiteMgr') || null,
+      }
+    };
+    await fetch('https://trade-control-ten.vercel.app/api/forms/site-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) { console.warn('TradeControl log failed (non-critical):', e); }
+}
+
 async function generateAndSend() {
   try {
     var to = v('fToEmail');
     if (!to) { setStatus('No builder email set. Pick a job or enter manually.', 'err'); return; }
     var cc = v('fCcEmail');
     var doc = buildPDF(); var filename = buildFilename();
-    var blob = doc.output('blob');
-    var file = new File([blob], filename, {type:'application/pdf'});
     var j = jobObj();
     var subject = 'Incident Report — ' + (v('fJob')||'') + ' ' + (j?j.name:'') + ' — ' + (v('fDate')||'');
     var body = 'Please find attached the completed Incident / Injury Report.\n\n'
@@ -713,16 +737,13 @@ async function generateAndSend() {
       + 'Person involved: ' + (v('fPerson')||'—') + '\n'
       + 'Incident type: ' + getToggle('incidentType') + '\n\n'
       + 'Regards,\nBarzen Projects';
-    if (navigator.canShare && navigator.canShare({files:[file]})) {
-      try { await navigator.share({files:[file], title:subject, text:body});
-            setStatus('Shared. Confirm ' + to + (cc?' (CC '+cc+')':'') + ' in email.', 'ok'); return;
-      } catch(e) {}
-    }
+    logToTradeControl();
     doc.save(filename);
-    var href = 'mailto:' + encodeURIComponent(to) + (cc?'?cc='+encodeURIComponent(cc)+'&':'?')
+    var ccParam = cc ? cc.split(',').map(function(e){ return encodeURIComponent(e.trim()); }).join(',') : '';
+    var href = 'mailto:' + encodeURIComponent(to) + (ccParam?'?cc='+ccParam+'&':'?')
       + 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body+'\n\n[Attach the downloaded "'+filename+'" before sending.]');
     setTimeout(function(){ window.location.href = href; }, 400);
-    setStatus('PDF downloaded. Email app opening — attach the PDF manually.', 'ok');
+    setStatus('PDF downloaded. Email app opening with addresses pre-filled — attach the PDF before sending.', 'ok');
   } catch(err) { console.error(err); setStatus('Error: '+err.message, 'err'); }
 }
 function generateAndDownload() {
