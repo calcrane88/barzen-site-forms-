@@ -469,9 +469,27 @@ function setStatus(msg, kind) {
   s.textContent = msg;
 }
 
-async function logToTradeControl() {
+async function generateAndSend() {
   try {
+    var to = v('fToEmail');
+    if (!to) { setStatus('No builder email set. Pick a job or enter manually.', 'err'); return; }
+    var cc = v('fCcEmail');
+    var doc = buildPDF(); var filename = buildFilename();
     var j = jobObj();
+
+    var subject = 'Test & Tag — ' + (v('fJob')||'') + ' ' + (j ? j.name : '') + ' — ' + (v('fDate')||'');
+    var emailBody = 'Please find attached the completed Test & Tag register.\n\n'
+      + 'Job: ' + (v('fJob')||'—') + (j ? ' — '+j.name : '') + '\n'
+      + 'Date: ' + (v('fDate')||'—') + '\n'
+      + 'Testing company: ' + (v('fCompany')||'—') + '\n'
+      + 'Cert/Licence: ' + (v('fLic')||'—') + '\n\n'
+      + 'Regards,\nBarzen Projects';
+
+    // Extract base64 from jsPDF output
+    var pdfBase64 = doc.output('datauristring').split(',')[1];
+
+    setStatus('Sending email with PDF attached...', 'ok');
+
     var payload = {
       form_type: 'test_and_tag',
       job_code: v('fJob') || null,
@@ -483,39 +501,38 @@ async function logToTradeControl() {
         company: v('fCompany'),
         licence: v('fLic'),
         items: window._tagItems || [],
+      },
+      email: {
+        to: to,
+        cc: cc || '',
+        subject: subject,
+        body: emailBody,
+        pdf_base64: pdfBase64,
+        pdf_filename: filename,
       }
     };
-    await fetch('https://trade-control-ten.vercel.app/api/forms/site-submit', {
+
+    var res = await fetch('https://trade-control-ten.vercel.app/api/forms/site-submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-  } catch(e) { console.warn('TradeControl log failed:', e); }
-}
 
-async function generateAndSend() {
-  try {
-    var to = v('fToEmail');
-    if (!to) { setStatus('No builder email set. Pick a job or enter manually.', 'err'); return; }
-    var cc = v('fCcEmail');
-    var doc = buildPDF(); var filename = buildFilename();
-    var j = jobObj();
-    var subject = 'Test & Tag — ' + (v('fJob')||'') + ' ' + (j ? j.name : '') + ' — ' + (v('fDate')||'');
-    var body = 'Please find attached the completed Test & Tag register.\n\n'
-      + 'Job: ' + (v('fJob')||'—') + (j ? ' — '+j.name : '') + '\n'
-      + 'Date: ' + (v('fDate')||'—') + '\n'
-      + 'Testing company: ' + (v('fCompany')||'—') + '\n'
-      + 'Cert/Licence: ' + (v('fLic')||'—') + '\n\n'
-      + 'Regards,\nBarzen Projects';
-    logToTradeControl();
-    var ccEncoded = cc ? cc.split(',').map(function(e){ return encodeURIComponent(e.trim()); }).join(',') : '';
-    var href = 'mailto:' + encodeURIComponent(to) + (ccEncoded?'?cc='+ccEncoded+'&':'?')
-      + 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body+'\n\n[Attach the downloaded "'+filename+'" before sending.]');
-    var a = document.createElement('a');
-    a.href = href; a.style.display = 'none';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    doc.save(filename);
-    setStatus('Email app opening with addresses pre-filled — attach the PDF before sending.', 'ok');
+    if (res.ok) {
+      setStatus('Email sent with PDF attached.', 'ok');
+    } else {
+      // Fallback: download PDF + open mailto if API fails
+      console.error('API send failed — falling back to mailto');
+      doc.save(filename);
+      var ccEncoded = cc ? cc.split(',').map(function(e){ return encodeURIComponent(e.trim()); }).join(',') : '';
+      var href = 'mailto:' + encodeURIComponent(to) + (ccEncoded?'?cc='+ccEncoded+'&':'?')
+        + 'subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(emailBody+'\n\n[PDF downloaded — please attach "'+filename+'" before sending.]');
+      var a = document.createElement('a');
+      a.href = href; a.style.display = 'none';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setStatus('API unavailable — PDF downloaded. Attach it to the email manually.', 'err');
+    }
   } catch(err) { console.error(err); setStatus('Error: '+err.message, 'err'); }
 }
 function generateAndDownload() {
